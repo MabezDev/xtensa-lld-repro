@@ -13,6 +13,9 @@ rustflags = [
   # LLD
   "-C", "linker=rust-lld",
   "-C", "link-arg=-Tlinkall.x",
+
+  "-C", "save-temps", # helpful for keeping all .o's around to relink without a full build
+  "-C", "link-arg=--threads=1" # single threaded lld for clean prints
 ]
 
 target = "xtensa-esp32s3-none-elf"

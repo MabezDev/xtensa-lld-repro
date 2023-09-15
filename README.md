@@ -80,9 +80,15 @@ OFFSET   TYPE              VALUE
 
 We can clearly see that the save_context and restore_context relocations worked, but when we tried to relocate __level_2_interrupt it failed.
 
-## Why might the relocations fail?
+My initial hunch was that at the time that LLD relocates __level_2_interrupt is when __level_2_interrupt is assigned to the default handler ([see here](https://github.com/esp-rs/xtensa-lx-rt/blob/b9e653db6eb2d72ff44f141bf453967e0b7aa273/exception-esp32.x.jinja#L8)), but later in the hal we override this handler [here](https://github.com/MabezDev/esp-hal/blob/1835b7fed2dfd24e6f421128df2a66c31a56f86c/esp-hal-common/src/interrupt/xtensa.rs#L368-L371C27). However, this doesn't seem to be the case.
 
-My hunch is that at the time that LLD relocates __level_2_interrupt is when __level_2_interrupt is assigned to the default handler ([see here](https://github.com/esp-rs/xtensa-lx-rt/blob/b9e653db6eb2d72ff44f141bf453967e0b7aa273/exception-esp32.x.jinja#L8)), but later in the hal we override this handler [here](https://github.com/MabezDev/esp-hal/blob/1835b7fed2dfd24e6f421128df2a66c31a56f86c/esp-hal-common/src/interrupt/xtensa.rs#L368-L371C27). The offset will have already been calculated and encoded in the l32r instruction, but the symbols actual position in ram will have changed. That's much guess anyway.
+I added some logging to LLD `std::cout << "Relocating  " << rel.sym->getName().str() << " dest: " << dest << "val: " << val << "isDefined(): " << rel.sym->isDefined() << "\n";`, the output is in output in data/relocation-log-lld.txt.
+
+If we look at the log output in data/relocation-log-lld.txt, there is only one entry for __level_2_interrupt. This on its own is quite suspect as inside __level_2_interrupt there is more than one relocation slot. If we plug the numbers from the log file for that relocation and calculate the PC like LLD does we get a pc of `0x40378510`, which means LLD is only doing the reloc for the call4 instruction inside __level_2_interrupt, which is really odd.
+
+```
+40378e57:	ff6b95        	call4	40378510 <__level_1_interrupt>
+```
 
 # Helpful commands
 
