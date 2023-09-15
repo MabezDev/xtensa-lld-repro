@@ -42,7 +42,7 @@ fn main() -> ! {
             info!("Enabling ALARM 0");
             interrupt::enable(
                 Interrupt::SYSTIMER_TARGET0,
-                Priority::Priority1,
+                Priority::Priority2,
             )
             .unwrap();
         }

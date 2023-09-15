@@ -16,3 +16,7 @@ critical-section = "1"
 esp32s3-hal = { git = "https://github.com/MabezDev/esp-hal", rev = "3dda1e29e366602cd8952265b7a7c826fe9a0a6a" }
 esp-hal-common = { git = "https://github.com/MabezDev/esp-hal", rev = "3dda1e29e366602cd8952265b7a7c826fe9a0a6a" }
 esp-hal-procmacros = { git = "https://github.com/MabezDev/esp-hal", rev = "3dda1e29e366602cd8952265b7a7c826fe9a0a6a" }
+
+# uncomment this and the broken example now works!
+# [profile.release]
+# lto = true
