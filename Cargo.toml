@@ -1,0 +1,18 @@
+[package]
+name = "xtensa_lld_repro"
+version = "0.1.0"
+authors = ["Scott Mabin <scott@mabez.dev>"]
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+hal = { package = "esp32s3-hal", version = "0.12.0" }
+esp-backtrace = { version = "0.8.0", features = ["esp32s3", "panic-handler", "exception-handler", "print-uart"] }
+esp-println = { version = "0.6.0", features = ["esp32s3","log"] }
+log = { version = "0.4.18" }
+critical-section = "1"
+
+[patch.crates-io]
+esp32s3-hal = { git = "https://github.com/MabezDev/esp-hal", rev = "3dda1e29e366602cd8952265b7a7c826fe9a0a6a" }
+esp-hal-common = { git = "https://github.com/MabezDev/esp-hal", rev = "3dda1e29e366602cd8952265b7a7c826fe9a0a6a" }
+esp-hal-procmacros = { git = "https://github.com/MabezDev/esp-hal", rev = "3dda1e29e366602cd8952265b7a7c826fe9a0a6a" }
